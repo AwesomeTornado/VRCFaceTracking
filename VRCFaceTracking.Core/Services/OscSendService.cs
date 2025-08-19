@@ -77,7 +77,7 @@ public class OscSendService
 
     public async Task Send(OscMessage message, CancellationToken ct)
     {
-        var nextByteIndex =await  message.Encode(_sendBuffer, ct);
+        var nextByteIndex = await message.Encode(_sendBuffer, ct);
         if (nextByteIndex > 4096)
         {
             _logger.LogError("OSC message too large to send! Skipping this batch of messages.");
@@ -90,12 +90,10 @@ public class OscSendService
 
     public async Task Send(OscMessage[] messages, CancellationToken ct)
     {
-        var cbt = messages.Select(m => m._meta).ToArray();
         var index = 0;
-        while (index < cbt.Length)
+        for (int i = 0; i < messages.Length; i++)
         {
-            var length = await Task.Run(() => fti_osc.create_osc_bundle(_sendBuffer, cbt, messages.Length, ref index), ct);
-            await _sendSocket?.SendAsync(_sendBuffer[..length])!;
+           await Send(messages[i], ct);
         }
         OnMessagesDispatched(index);
     }

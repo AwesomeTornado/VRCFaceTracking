@@ -90,7 +90,6 @@ public class BaseParam<T> : Parameter where T : struct
         {
             Relevant = true;
             OscMessage.Address = DefaultPrefix + _paramName;
-
             return new Parameter[] { this };
         }
 
@@ -102,6 +101,8 @@ public class BaseParam<T> : Parameter where T : struct
         {
             Relevant = true;
             OscMessage.Address = compatibleParam.Address;
+            
+            Console.WriteLine(OscMessage.Address);
         }
         else
         {
